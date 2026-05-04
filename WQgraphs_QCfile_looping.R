@@ -1,18 +1,12 @@
 # script to make graphs (8 per page) of WQ data by
 # looping through all csv files in a folder
-# by Kim Cressman, Grand Bay NERR
-# kimberly.cressman@dmr.ms.gov
-# updated 2018-07-12
+# by Kim Cressman
+# latest update 2026-05-04
 
 
-### IMPORTANT
-# Make sure the ONLY csv files in the folder you want to work in are QC files automatically emailed from the CDMO
-# This script has NOT been error-proofed so if you have a file that it doesn't recognize, the script will stop in its tracks
-
-
-### IMPORTANT 2
-# The folder-choice pop-up does NOT show up on top of other programs
-# You MUST either click on the RStudio icon to minimize RStudio OR just minimize everything else to make the pop-up visible 
+### IMPORTANT 
+# If you are not using RStudio, he folder-choice pop-up MAY NOT show up on top of other programs
+# You MUST minimize everything else to make the pop-up visible 
 
 
 
@@ -27,11 +21,22 @@
 
 
 # interactively choose which folder you want to work in
-library(tcltk) #this package is part of base R and does not need to be installed separately
-my.dir <- tk_choose.dir(getwd(), caption = "Choose which folder you want to work in")
+# if using rstudio, the pop-up will come up on top of other windows
+# otherwise, other programs might have to be minimized to find the tcltk window
+# both rstudio and tcltk are installed automatically 
+if (rstudioapi::isAvailable()) {
+    my.dir <- rstudioapi::selectDirectory(
+        caption = "Choose which folder you want to work in",
+        path = getwd()
+    )
+} else {
+    my.dir <- tcltk::tk_choose.dir(getwd(), caption = "Choose which folder you want to work in")
+}
 
 # get the list of files in the directory that you want to graph
-names.dir <- list.files(path = my.dir, pattern = ".csv")
+names.dir <- list.files(path = my.dir, 
+                        pattern = "wq[0-9]{6}_QC\\.csv",
+                        ignore.case = TRUE)
 n <- length(names.dir)
 
 for(i in 1:n)
@@ -41,13 +46,14 @@ for(i in 1:n)
   
   # generate the full file path for reading and exporting files
   # without the use of setwd()
-  full_file_path <- paste0(my.dir, "/", myFile)
+  full_file_path <- file.path(my.dir, myFile)
   
   # read in the file and generate names for output
-  ysi.data <- read.csv(full_file_path)
+  ysi.data <- read.csv(full_file_path,
+                       fileEncoding = "latin1")  # deals with special characters in column names
   x <- nchar(myFile) # counting the characters in the file name
-  Title = substr(myFile,1,x-4) # for top of graphs; this should return the full name of the file (minus '.csv')
-  Titlepdf <- paste0(my.dir, "/", Title, ".pdf") # for export file
+  Title = substr(myFile, 1, x-4) # for top of graphs; this should return the full name of the file (minus '.csv')
+  Titlepdf <- file.path(my.dir, paste0(Title, ".pdf")) # for export file
 
 
   # If there's already a DateTime column, don't do anything. If there's not, paste together Date and Time into DateTime.
