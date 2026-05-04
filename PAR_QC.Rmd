@@ -113,6 +113,10 @@ dat3 <- dat2 %>%
 
 This uses `pmap()` from the `purrr` package to apply the function we made above to the rows of my modified data frame. I've hard-coded a few of the parameters specific to Grand Bay's MET station, and these need to be changed for other people to use the code. Latitude, longitude (positive degrees for west, which is opposite what most people are used to), and the center of the time zone (75, 90, 105, 120 for eastern, central, mountain, and pacific, respectively; others can be found here: http://clearskycalculator.com/longitudeTZ.htm )
 
+5/4/26 - the above link no longer exists, but it seems that time zones span ~15 degrees each. Based on this site: https://www.gi.alaska.edu/alaska-science-forum/time-zones , additional longitudes for time zones are 135 Yukon (GMT-9); 150 Alaska (-10); 165 Bering (-11); 180 for ?? (-12 / +12).  
+
+Eastern is GMT-5; Central -6; Mountain -7; Pacific -8. Can use time zones ('GMT Offset') and longitudes from `sampling_stations.csv` that comes with every CDMO download to make a table for this.  
+
 ```{r}
 par_out <- dat3 %>% 
         mutate(modpar = pmap(list(doy = doy,
