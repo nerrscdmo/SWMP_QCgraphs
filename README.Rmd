@@ -34,10 +34,9 @@ These should work (and return the correct axis label) for either Depth or Level.
 
 ### WQgraphs_QCfile_looping: Loop through CDMO-returned QC files in a folder  
 
-`WQgraphs_QCfile_looping`: runs through every CSV in the selected working directory; generates pdf output for each.  
+`WQgraphs_QCfile_looping`: runs through every wq_QC CSV in the selected working directory; generates pdf output for each.  
 
-+  The only package used in this script is `tcltk`, which is installed along with base R.   
-+  Make sure the only CSVs in your folder are water quality QC files emailed from the CDMO after file upload.  
++  The only packages used in this script are `rstudioapi`, which is installed with RStudio, and `tcltk`, which is installed along with base R.   
 +  Parameters plotted are: Temp, SpCond, Sal, Depth/Level (works with either), DO_pct, pH, Turb, and Battery.  
 
 
@@ -50,19 +49,19 @@ These should work (and return the correct axis label) for either Depth or Level.
 
 ### METgraphs_QCfile_single-file: One file  
 
-`METgraphs_QCfile_single-file`: allows you to interactively select a single file from which to generate graphs. __This is usually the script I use for MET graphs, because we only download one file at once.__    
+Removed, because if there's only one file, the loop still works. It's just a loop of 1.  
+
+
+### METgraphs_QCfile_looping: Loop through files in a folder  
+
+Runs through every met_QC CSV or DAT file in the selected working directory.
 
 +  Packages needed for this script and an installation command if you need it:  
-    +  `clifro`  - `install.packages('clifro')`  
-    +  `ggplot2` - `install.packages('ggplot2')`  
+    +  `openair`  - `install.packages('openair')`  this package in turn relies on:
+    +  `dplyr`, at least version 1.2.0  - `install.packages('dplyr')`
 +  A pdf file with two pages is generated:  
     +  The first page has line graphs of ATemp, RH, BP, TotPAR, WSpd, MaxWSpd, CumPrcp, and AvgVolt (which represents battery).  
     +  The second page has a wind rose, which shows direction in addition to speed.  
-
-
-### METgraphs_QCfile_looping: Loop through files in a folder
-
-`METgraphs_QCfile_looping`: Just like the above MET script, but it runs through every CSV in the selected working directory. As above, the `ggplot2` and `clifro` packages are required.  
 
 #### Example output  
 
@@ -76,7 +75,7 @@ __See some problems? This is why it's important to graph data.__
 
 __Wind Rose__  
 
-This is pretty typical for winter at our site. Most wind is out of the North.
+This is pretty typical for winter at Grand Bay. Most wind is out of the North.
 
 ![Wind Rose](readme_images/gndcrmet110717_QC2-2.png)
 
@@ -95,14 +94,6 @@ These instructions are also in comments at the top of each script. Scripts can b
 5.  Let the script do its thing.  
 6.  Look in the directory with your data files and your pdf files will be there!  
 
-# Some cautions  
-
-These scripts have NOT been error-proofed.  
-
-+  If you have some CSV in your working directory that does not match the format of the script, it will stop in its tracks and return an error message. Move the files you want to graph into their own folder and use that instead.  
-    +  For `WQgraphs_rawEXO_looping`, they need to be Excel (.xls or .xlsx) files exported from EXOs using version 1 of KOR software. (They might work with version 2 but we don't use that - if you do and have issues, please let me know what they are.)  
-    +  For the other scripts: `WQgraphs_QCfile_looping`, `METgraphs_QCfile_looping`, and `METgraphs_QCfile_single-file`, the files need to be .csv files returned by the CDMO.  
- 
 
 These were designed to just work and make your life easy even if you don't know R, so PLEASE let me know if something goes wrong! You can open a GitHub issue here or just email me. And if you know how to make these scripts more robust to errors, feel free to make a pull request. (If you don't know what that means, just email me the scripts with your updates and I'll make them available here.)  
 

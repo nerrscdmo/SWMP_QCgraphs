@@ -1,13 +1,13 @@
-# script to make graphs (8 per page) of WQ data by
-# looping through all csv files in a folder
+# script to loop through all QC-WQ files in a folder (csv) and
+# make line graphs (8 per page) of data 
 # by Kim Cressman
-# latest update 2026-05-04
+# latest update 2026-05-05
 
+################################################################################
 
-### IMPORTANT 
-# If you are not using RStudio, he folder-choice pop-up MAY NOT show up on top of other programs
-# You MUST minimize everything else to make the pop-up visible 
-
+### IMPORTANT
+# If you are not using RStudio, the folder-choice pop-up MAY NOT show up on top of other programs
+# You MUST minimize everything else to make the pop-up visible
 
 
 ### INSTRUCTIONS
@@ -18,12 +18,14 @@
 # 5 - Magic happens
 # 6 - Look in the folder you selected and pdf files should be there
 
+################################################################################
+################################################################################
 
 
 # interactively choose which folder you want to work in
 # if using rstudio, the pop-up will come up on top of other windows
 # otherwise, other programs might have to be minimized to find the tcltk window
-# both rstudio and tcltk are installed automatically 
+# both rstudio and tcltk are installed automatically
 if (rstudioapi::isAvailable()) {
     my.dir <- rstudioapi::selectDirectory(
         caption = "Choose which folder you want to work in",
@@ -34,25 +36,25 @@ if (rstudioapi::isAvailable()) {
 }
 
 # get the list of files in the directory that you want to graph
-names.dir <- list.files(path = my.dir, 
+names.dir <- list.files(path = my.dir,
                         pattern = "wq[0-9]{6}_QC\\.csv",
                         ignore.case = TRUE)
 n <- length(names.dir)
 
-for(i in 1:n)
+for (i in 1:n)
 {
   # find the next file in the loop
-  myFile <- names.dir[i] 
-  
+  myFile <- names.dir[i]
+
   # generate the full file path for reading and exporting files
   # without the use of setwd()
   full_file_path <- file.path(my.dir, myFile)
-  
+
   # read in the file and generate names for output
   ysi.data <- read.csv(full_file_path,
-                       fileEncoding = "latin1")  # deals with special characters in column names
+                       fileEncoding = "latin1") # deals with special characters in column names
   x <- nchar(myFile) # counting the characters in the file name
-  Title = substr(myFile, 1, x-4) # for top of graphs; this should return the full name of the file (minus '.csv')
+  Title = substr(myFile, 1, x - 4) # for top of graphs; this should return the full name of the file (minus '.csv')
   Titlepdf <- file.path(my.dir, paste0(Title, ".pdf")) # for export file
 
 
@@ -68,125 +70,132 @@ for(i in 1:n)
   # make the whole DateTime column that unified column
   ysi.data$DateTime <- ysi.data$DateTimeA
 
-  
+
   # return Depth or Level as 'Depth_or_Level'
   # then generate the name for the y-axis based on which it is
 
   # figure out which is in the file
   label.level <- sum(grepl("^Level", names(ysi.data))) # 0 if no 'level' column; number otherwise
   label.depth <- sum(grepl("^Depth", names(ysi.data))) # 0 if no 'depth' column; number otherwise
-  if(label.level == 1) {
+  if (label.level == 1) {
       pos.depth_or_level <- grep("Level", names(ysi.data))
       depth_or_level_name <- "Level"
       }
-  if(label.depth == 1) {
+  if (label.depth == 1) {
       pos.depth_or_level <- grep("Depth", names(ysi.data))
       depth_or_level_name <- "Depth"
       }
   names(ysi.data)[pos.depth_or_level] <- "Depth_or_Level"
-  
-    
+
+
 
   # open up a pdf file to print to
-  pdf(file=Titlepdf) 
-    
-  #make the graph page layout 4 rows and 2 columns so all graphs will fit on a page
-  par(mfcol=c(4,2), mar=c(2.1, 4.1, 1.1, 1.1), oma=c(1,1,2,1))
-  
-  ## make the graphs
-  
-  # water temp
-  plot(Temp~DateTime, data=ysi.data, 
-       type="l", 
-       xlab = "", xaxt='n', 
-       col="darkred")
-  axis.POSIXct(1, at=seq(min(ysi.data$DateTime, na.rm=TRUE), 
-                         max(ysi.data$DateTime, na.rm=TRUE), length.out=5), 
-               format="%m/%d", cex.axis=0.9)
-  
-  # SpCond
-  plot(SpCond~DateTime, data=ysi.data, 
-       type="l", 
-       xlab = "", xaxt='n', 
-       col="darkblue")
-  axis.POSIXct(1, at=seq(min(ysi.data$DateTime, na.rm=TRUE), 
-                         max(ysi.data$DateTime, na.rm=TRUE), length.out=5),
-               format="%m/%d", cex.axis=0.9)
+  pdf(file = Titlepdf,
+      paper = "letter",
+      width = 7.5,
+      height = 9,
+      pagecentre = TRUE,
+      family = "sans")
 
-  # salinity  
-  plot(Sal~DateTime, data=ysi.data, 
-       type="l", 
-       xlab = "", xaxt='n', 
-       col="darkgreen")
-  axis.POSIXct(1, at=seq(min(ysi.data$DateTime, na.rm=TRUE), 
-                         max(ysi.data$DateTime, na.rm=TRUE), length.out=5),
-               format="%m/%d", cex.axis=0.9)
-  
+  # make the graph page layout 4 rows and 2 columns so all graphs will fit on a page
+  par(mfcol = c(4, 2), 
+      mar = c(2.1, 4.1, 1.1, 1.1), 
+      oma = c(1, 1, 2, 1))
+
+  ## make the graphs
+
+  # water temp
+  plot(Temp ~ DateTime, data = ysi.data,
+       type = "l",
+       xlab = "", xaxt = 'n',
+       col = "darkred")
+  axis.POSIXct(1, at = seq(min(ysi.data$DateTime, na.rm = TRUE),
+                         max(ysi.data$DateTime, na.rm = TRUE), length.out = 5),
+               format = "%m/%d", cex.axis = 0.9)
+
+  # SpCond
+  plot(SpCond ~ DateTime, data = ysi.data,
+       type = "l",
+       xlab = "", xaxt = 'n',
+       col = "darkblue")
+  axis.POSIXct(1, at = seq(min(ysi.data$DateTime, na.rm = TRUE),
+                         max(ysi.data$DateTime, na.rm = TRUE), length.out = 5),
+               format = "%m/%d", cex.axis = 0.9)
+
+  # salinity
+  plot(Sal ~ DateTime, data = ysi.data,
+       type = "l",
+       xlab = "", xaxt = 'n',
+       col = "darkgreen")
+  axis.POSIXct(1, at = seq(min(ysi.data$DateTime, na.rm = TRUE),
+                         max(ysi.data$DateTime, na.rm = TRUE), length.out = 5),
+               format = "%m/%d", cex.axis = 0.9)
+
   # depth / level
-  plot(Depth_or_Level~DateTime, data=ysi.data, 
-       type="l", 
-       xlab = "", xaxt='n',
+  plot(Depth_or_Level ~ DateTime, data = ysi.data,
+       type = "l",
+       xlab = "", xaxt = 'n',
        ylab = depth_or_level_name,
-       col="darkslategray")
-  axis.POSIXct(1, at=seq(min(ysi.data$DateTime, na.rm=TRUE), 
-                         max(ysi.data$DateTime, na.rm=TRUE), length.out=5),
-               format="%m/%d", cex.axis=0.9)
- 
-  # DO% 
-  plot(DO_pct~DateTime, data=ysi.data, 
-       type="l", 
-       xlab = "", xaxt='n', 
-       col="darkorange")
-  axis.POSIXct(1, at=seq(min(ysi.data$DateTime, na.rm=TRUE), 
-                         max(ysi.data$DateTime, na.rm=TRUE), length.out=5),
-               format="%m/%d", cex.axis=0.9)
-  
+       col = "darkslategray")
+  axis.POSIXct(1, at = seq(min(ysi.data$DateTime, na.rm = TRUE),
+                         max(ysi.data$DateTime, na.rm = TRUE), length.out = 5),
+               format = "%m/%d", cex.axis = 0.9)
+
+  # DO%
+  plot(DO_pct ~ DateTime, data = ysi.data,
+       type = "l",
+       xlab = "", xaxt = 'n',
+       col = "darkorange")
+  axis.POSIXct(1, at = seq(min(ysi.data$DateTime, na.rm = TRUE),
+                         max(ysi.data$DateTime, na.rm = TRUE), length.out = 5),
+               format = "%m/%d", cex.axis = 0.9)
+
   # # DO mg/L
   # commented out so battery voltage can be included instead
   # but if you want it back, just delete the ##s in front
-  # plot(DO_mgl~DateTime, data=ysi.data, 
-  #      type="l", 
-  #      xlab = "", xaxt='n', 
+  # plot(DO_mgl~DateTime, data=ysi.data,
+  #      type="l",
+  #      xlab = "", xaxt='n',
   #      col="darkmagenta")
-  # axis.POSIXct(1, at=seq(min(ysi.data$DateTime, na.rm=TRUE), 
+  # axis.POSIXct(1, at=seq(min(ysi.data$DateTime, na.rm=TRUE),
   #                        max(ysi.data$DateTime, na.rm=TRUE), length.out=5),
   #              format="%m/%d", cex.axis=0.9)
-  
+
   # pH
-  plot(pH~DateTime, data=ysi.data, 
-       type="l", 
-       xlab = "", xaxt='n', 
-       col="darkturquoise")
-  axis.POSIXct(1, at=seq(min(ysi.data$DateTime, na.rm=TRUE), 
-                         max(ysi.data$DateTime, na.rm=TRUE), length.out=5),
-               format="%m/%d", cex.axis=0.9)
-  
+  plot(pH ~ DateTime, data = ysi.data,
+       type = "l",
+       xlab = "", xaxt = 'n',
+       col = "darkturquoise")
+  axis.POSIXct(1, at = seq(min(ysi.data$DateTime, na.rm = TRUE),
+                         max(ysi.data$DateTime, na.rm = TRUE), length.out = 5),
+               format = "%m/%d", cex.axis = 0.9)
+
   # turbidity
-  plot(Turb~DateTime, data=ysi.data, 
-       type="l", 
-       xlab = "", xaxt='n', 
-       col="darkkhaki")
-  axis.POSIXct(1, at=seq(min(ysi.data$DateTime, na.rm=TRUE), 
-                         max(ysi.data$DateTime, na.rm=TRUE), length.out=5),
-               format="%m/%d", cex.axis=0.9)
-  
+  plot(Turb ~ DateTime, data = ysi.data,
+       type = "l",
+       xlab = "", xaxt = 'n',
+       col = "darkkhaki")
+  axis.POSIXct(1, at = seq(min(ysi.data$DateTime, na.rm = TRUE),
+                         max(ysi.data$DateTime, na.rm = TRUE), length.out = 5),
+               format = "%m/%d", cex.axis = 0.9)
+
   # battery
-  plot(Battery~DateTime, data=ysi.data, 
-       type="l", 
-       xlab = "", xaxt='n', 
-       col="orangered3")
-  axis.POSIXct(1, at=seq(min(ysi.data$DateTime, na.rm=TRUE), 
-                         max(ysi.data$DateTime, na.rm=TRUE), length.out=5),
-               format="%m/%d", cex.axis=0.9)
-  
+  plot(Battery ~ DateTime, data = ysi.data,
+       type = "l",
+       xlab = "", xaxt = 'n',
+       col = "orangered3")
+  axis.POSIXct(1, at = seq(min(ysi.data$DateTime, na.rm = TRUE),
+                         max(ysi.data$DateTime, na.rm = TRUE), length.out = 5),
+               format = "%m/%d", cex.axis = 0.9)
+
   # put the title of the file above all the plots on the page
-  mtext(Title, outer=TRUE, side=3, cex=0.9, font=2)
-  
-  #turn off pdf printer
+  mtext(Title, outer = TRUE, side = 3, cex = 0.9, font = 2)
+
+  # turn off pdf printer
   dev.off()
 }
 
-#reset to one graph per page
-par(mfrow=c(1,1))
+# reset to one graph per page
+par(mfrow = c(1, 1))
 
 print('Finished!')
