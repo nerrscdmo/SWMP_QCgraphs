@@ -49,7 +49,7 @@ These should work (and return the correct axis label) for either Depth or Level.
 
 ### METgraphs_QCfile_single-file: One file  
 
-Removed, because if there's only one file, the loop still works. It's just a loop of 1.  
+Removed, because if there's only one file, the loop still works.   
 
 
 ### METgraphs_QCfile_looping: Loop through files in a folder  
@@ -89,7 +89,7 @@ These instructions are also in comments at the top of each script. Scripts can b
 2.  Put the cursor somewhere in the script window, and hit 'Ctrl+a' to select all.  
 3.  Either click the 'Run' button in the upper right corner of the script window, or use the 'Ctrl+Enter' keyboard shortcut to run the script.  
 4.  Interactively choose the folder you want to work in (for the looping scripts) or the single file you want (for the MET single-file script).  
-    +  __The file-choice pop-up does NOT show up on top of other programs; you MUST either click on the RStudio icon to minimize RStudio OR just minimize everything else to make the pop-up visible.__  
+    +  __Unless you're using RStudio, the file-choice pop-up will not show up on top of other programs and you will have to minimize everything else to make the pop-up visible.__  
     +  These scripts will not change your working directory. (Versions created before 7/12/2018 did.)
 5.  Let the script do its thing.  
 6.  Look in the directory with your data files and your pdf files will be there!  
