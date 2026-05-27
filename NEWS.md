@@ -2,11 +2,11 @@
 
 ### Major  
 
--  removed MET single file script. Looping script can run on a single file  
+-  MET single file script was removed; looping script can run on a single file.  
 -  **Error-proofing** - now the scripts only run on files that match the pattern (met or wq)mmddyy_QC. This means the script will no longer stop if you have multiple file types (met/wq) or other csv files in the directory.     
--  updated to use `rstudioapi`, meaning that if the user is in RStudio, the pop-up to select which folder to work out of will appear on top of other windows (like we expect things to).
--  MET script - wind rose updated to use `{openair}` because `{clifro}` is no longer on CRAN  
--  MET script - can use .csv or .dat files as input 
+-  `{rstudioapi}` incorporated so if the user is in RStudio, the pop-up to select the working directory (which folder to work out of) will appear on top of other windows (like we expect things to). If user is not in RStudio IDE, the `{tcltk}` package (base R; original script versions) will be used.
+-  MET script - wind rose now uses `{openair}` because `{clifro}` is no longer on CRAN  
+-  MET script now accepts either .csv or .dat files as input 
 
 
 ### Minor/not visible to user  
