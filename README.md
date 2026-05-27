@@ -1,29 +1,24 @@
-R Scripts for SWMP QC
+R Scripts for SWMP QA/QC
 ================
 
 - [Script Descriptions](#script-descriptions)
   - [Water Quality Scripts](#water-quality-scripts)
-    - [WQgraphs_rawEXO_looping: Loop through raw EXO Excel files in a
-      folder](#wqgraphs_rawexo_looping-loop-through-raw-exo-excel-files-in-a-folder)
     - [WQgraphs_QCfile_looping: Loop through CDMO-returned QC files in a
       folder](#wqgraphs_qcfile_looping-loop-through-cdmo-returned-qc-files-in-a-folder)
   - [Weather Station Scripts](#weather-station-scripts)
-    - [METgraphs_QCfile_single-file: One
-      file](#metgraphs_qcfile_single-file-one-file)
     - [METgraphs_QCfile_looping: Loop through files in a
       folder](#metgraphs_qcfile_looping-loop-through-files-in-a-folder)
 - [Instructions for running scripts](#instructions-for-running-scripts)
 - [Shout-outs](#shout-outs)
 
-This is a collection of R scripts that can be used to QC SWMP data.
+This is a collection of R scripts that can be used to QA/QC SWMP data.
 Right click on the script name above (scroll up above the table of
 contents) and click ‘save link as’ to download. Each script has limited
 interactivity - in the course of running, you will be able to choose a
 working directory through Windows Explorer.
 
-Most of these work on QC files returned from the CDMO after data upload.
-There is one that will run on raw Excel files downloaded from YSI EXO2
-instruments.
+These scripts are built to work with QC files returned from the CDMO
+after data upload.
 
 These should work (and return the correct axis label) for either Depth
 or Level. Please let me know if you run into problems.
@@ -31,29 +26,6 @@ or Level. Please let me know if you run into problems.
 # Script Descriptions
 
 ## Water Quality Scripts
-
-### WQgraphs_rawEXO_looping: Loop through raw EXO Excel files in a folder
-
-`WQgraphs_rawEXO_looping`: runs through every Excel (.xls or .xlsx) file
-in the selected working directory; generates pdf output for each.
-
-- Packages needed for this script and an installation command if you
-  need it:
-  - `dplyr` - `install.packages('dplyr')`  
-  - `lubridate` - `install.packages('lubridate')`  
-  - `readxl` - `install.packages('readxl')`  
-- Make sure the only Excel files in your folder are files downloaded
-  from EXOs.  
-- Parameters plotted are: temp, spcond, sal, depth/level (script works
-  with either), do_pct, ph, turb, and battery_v.  
-- Script should work with either depth or level. Should also work for
-  different units used when programming EXOs (e.g. salinity psu
-  vs. salinity ppt).
-- The name of the output file (and the title above the graphs) is, by
-  default, the full name of the Excel file, which includes instrument
-  serial number and date-time on which the file started. To cut off all
-  the extra stuff at the end, uncomment line 55. (You do not have to
-  comment out line 52, but you can if you want to.)
 
 ### WQgraphs_QCfile_looping: Loop through CDMO-returned QC files in a folder
 
@@ -71,10 +43,6 @@ working directory; generates pdf output for each.
 ![](readme_images/GNDBCWQ061918_QC.png)
 
 ## Weather Station Scripts
-
-### METgraphs_QCfile_single-file: One file
-
-Removed, because if there’s only one file, the loop still works.
 
 ### METgraphs_QCfile_looping: Loop through files in a folder
 
