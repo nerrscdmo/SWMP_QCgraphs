@@ -1,3 +1,8 @@
+# v2.0.0  
+
+-  Transferred ownership of repository to nerrscdmo  
+-  Tagged as official release. Using v2.0.0 because I consider prior versions to be 1.0, even if they weren't officially tagged that way.
+
 ## 2026-05 updates  
 
 ### Major  
